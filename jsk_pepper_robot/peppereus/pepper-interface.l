@@ -117,6 +117,11 @@
   (:go-stop
    ()
    (send self :go-velocity 0 0 0 0 :stop nil))
+  (:speak
+   (str)
+   (let ((speech_msg (instance std_msgs::String :init)))
+     (send speech_msg :data str)
+     (ros::publish "/speech" speech_msg)))
   (:play-audio-file (file)
    (let (ret)
      (ros::wait-for-service "nao_audio/play_file")
