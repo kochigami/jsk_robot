@@ -53,6 +53,6 @@ how to make nao model on euslisp
 
 Install nao mesh files from deb with manual approval of license
 ```
-sudo apt-get-ros-<ros version>-nao-meshes
+sudo apt-get ros-<ros version>-nao-meshes
 catkin build naoeus
 ```
