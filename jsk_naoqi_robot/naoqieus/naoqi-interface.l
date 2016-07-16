@@ -213,5 +213,9 @@
 	     (setq res (ros::service-call (format nil "~A/pose/life/getState" naoqi-namespace) req))
 	     (send res :status :data)
 	     )
+  (:start-people-tracker ()
+			 (call-empty-service "start_tracker"))
+  (:stop-people-tracker ()
+			 (call-empty-service "stop_tracker"))
   )
 ;;
