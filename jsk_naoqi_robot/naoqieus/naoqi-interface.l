@@ -229,5 +229,27 @@
    (setq res (ros::service-call "/get_external_collision_protection_status" req))
    (send res :status)
    )
+  (:set-move-arms-enabled 
+   (status &optional (arm :arms))
+   (let ((ret (instance naoqi_bridge_msgs::SetArmsEnabledRequest :init)))
+     (ros::wait-for-service "/set_move_arms_enabled")
+     (case arm
+	   (:arms 
+	    (send ret :left_arm status)
+	    (send ret :right_arm status))
+	   (:rarm 
+	    (send ret :right_arm status))
+	   (:larm 
+	    (send ret :left_arm status)))
+     (setq ret (ros::service-call "/set_move_arms_enabled" ret)))
+   )
+  (:get-stiffnesses 
+   (jointName)
+   (let ((ret (instance naoqi_bridge_msgs::GetStiffnesses :init)))
+     (ros::wait-for-service "/get_stiffnesses")
+     (send ret :joint_name :name  jointName)
+     (setq res (ros::service-call "/get_stiffnesses" ret))
+     (send res :status :data)
+     ))
   )
 ;;
