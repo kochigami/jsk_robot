@@ -245,7 +245,7 @@
    )
   (:get-stiffnesses 
    (jointName)
-   (let ((ret (instance naoqi_bridge_msgs::GetStiffnesses :init)))
+   (let ((ret (instance naoqi_bridge_msgs::GetStiffnessesRequest :init)))
      (ros::wait-for-service "/get_stiffnesses")
      (send ret :joint_name :name  jointName)
      (setq res (ros::service-call "/get_stiffnesses" ret))
