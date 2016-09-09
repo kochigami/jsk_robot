@@ -24,6 +24,8 @@
 	 (instance ros::simple-action-client :init
 		   (format nil "~A/pose/joint_stiffness_trajectory" naoqi-namespace)
 		   naoqi_bridge_msgs::JointTrajectoryAction))
+   (ros::advertise "/pepper_dcm/Wheels_controller/command" trajectory_msgs::JointTrajectory 1) 
+   (ros::advertise "/pepper_dcm/LeftArm_controller/command" trajectory_msgs::JointTrajectory 1) 
    self)
   ;;
   (:naoqi-controller
@@ -213,5 +215,63 @@
 	     (setq res (ros::service-call (format nil "~A/pose/life/getState" naoqi-namespace) req))
 	     (send res :status :data)
 	     )
+  (:move-LeftArm (joint position)
+		 (let ((goal (instance trajectory_msgs::JointTrajectory :init))
+		       joint-name)
+		   (setq position (deg2rad position))
+		   (send goal :header :seq 1)
+		   (send goal :header :stamp (ros::time-now))
+		   (case joint  
+			 (:LShoulderPitch
+			  (setq pos (list position 0 0 0 0)))
+			 (:LShoulderRoll
+			  (setq pos (list 0 position 0 0 0)))
+			 (:LElbowYaw
+			  (setq pos (list 0 0 position 0 0)))
+			 (:LElbowRoll
+			  (setq pos (list 0 0 0 position 0)))
+			 (:LWristYaw
+			  (setq pos (list 0 0 0 0 position)))
+			 )
+		   (setq joint-name (list "LShoulderPitch" "LShoulderRoll" "LElbowYaw" "LElbowRoll" "LWristYaw")) 
+		   (send goal :joint_names joint-name)
+		   ;;(send goal :goal :trajectory :header :stamp (ros::time-now))
+		   (send goal :points
+			 (list (instance trajectory_msgs::JointTrajectoryPoint
+					 :init
+					 :positions 
+					 ;; (fill (instantiate float-vector (length joint-name)) 0)
+					 pos
+					 :time_from_start (ros::time 1))))
+		   (ros::publish "/pepper_dcm/LeftArm_controller/command" goal)
+		   )
+		 )
+  (:move-wheel (joint position)
+   (let ((goal (instance trajectory_msgs::JointTrajectory :init))
+	 joint-name)
+     (setq position (deg2rad position))
+     (send goal :header :seq 1)
+     (send goal :header :stamp (ros::time-now))
+     (case joint  
+       (:wheelFL
+	(setq pos (list position 0 0)))
+       (:wheelB 
+	(setq pos (list 0 position 0)))
+       (:wheelFR
+	(setq pos (list 0 0 position)))
+       )
+     (setq joint-name (list "WheelFL" "WheelB" "WheelFR")) 
+     (send goal :joint_names joint-name)
+     ;;     (send goal :goal :trajectory :header :stamp (ros::time-now))
+     (send goal :points
+	   (list (instance trajectory_msgs::JointTrajectoryPoint
+			   :init
+			   :positions 
+			   ;; (fill (instantiate float-vector (length joint-name)) 0)
+			   pos
+			   :time_from_start (ros::time 1))))
+     (ros::publish "/pepper_dcm/Wheels_controller/command" goal)
+	       )
+   )
   )
 ;;
