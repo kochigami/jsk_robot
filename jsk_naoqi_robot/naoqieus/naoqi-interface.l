@@ -422,5 +422,22 @@
      (setq res (ros::service-call "/listening_movement_is_enabled" ret))
      (send res :success)
      ))
+  (:set-language
+   (language)
+   (let ((ret (instance naoqi_bridge_msgs::SetLanguageRequest :init))
+	 res)
+     (ros::wait-for-service "/naoqi_driver/set_language")
+     (send ret :language language)
+     (setq res (ros::service-call "/naoqi_driver/set_language" ret))
+     (send res :success))
+   )
+  (:get-language
+   ()
+   (let ((ret (instance naoqi_bridge_msgs::GetLanguageRequest :init))
+	 res)
+     (ros::wait-for-service "/naoqi_driver/get_language")
+     (setq res (ros::service-call "/naoqi_driver/get_language" ret))
+     (send res :language))
+   )
   )
 ;;
