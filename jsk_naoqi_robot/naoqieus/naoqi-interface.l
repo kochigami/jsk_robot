@@ -371,7 +371,6 @@
      (setq res (ros::service-call "/get_move_arms_enabled" ret))
      (send res :status))
    )
-<<<<<<< HEAD
   (:set-basic-awareness-enabled
    (status)
    (let ((ret (instance std_srvs::SetBoolRequest :init))
@@ -439,6 +438,7 @@
      (ros::wait-for-service "/naoqi_driver/get_language")
      (setq res (ros::service-call "/naoqi_driver/get_language" ret))
      (send res :language))
+   )
   (:get-led-color-name
    ()
    (format t ":white, :red, :green, :blue, :yellow, :magenta, :cyan")
