@@ -371,7 +371,6 @@
      (setq res (ros::service-call "/get_move_arms_enabled" ret))
      (send res :status))
    )
-<<<<<<< HEAD
   (:set-basic-awareness-enabled
    (status)
    (let ((ret (instance std_srvs::SetBoolRequest :init))
