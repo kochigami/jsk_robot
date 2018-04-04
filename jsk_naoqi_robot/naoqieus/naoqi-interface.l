@@ -423,5 +423,14 @@
      (setq res (ros::service-call "/basic_awareness/is_enabled" ret))
      (send res :success)
      ))
+  (:take-picture
+   (file-name)
+   (let ((ret (instance naoqi_bridge_msgs::SetStringRequest :init))
+	 res)
+     (ros::wait-for-service "take_picture")
+     (send ret :data file-name)
+     (setq res (ros::service-call "take_picture" ret))
+     (send res :success)
+     ))
   )
 ;;

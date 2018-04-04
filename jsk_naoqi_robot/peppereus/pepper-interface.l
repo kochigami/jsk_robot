@@ -57,14 +57,14 @@
 	 (cons :action-type naoqi_bridge_msgs::JointTrajectoryAction)
 	 (cons :joint-names (mapcar #'(lambda (n) (if (symbolp n) (symbol-name n) n)) (send-all (send robot :joint-list) :name)))))
        )))
-  (:show-image 
-   (file)
-   (let (ret)
+  (:show-image
+   (file-name)
+   (let ((ret (instance naoqi_bridge_msgs::SetStringRequest :init))
+	 res)
      (ros::wait-for-service "show_image")
-     (setq ret (instance naoqi_bridge_msgs::ShowResourceRequest :init))
-     (send ret :name :data file)
+     (send ret :data file-name)
      (setq res (ros::service-call "show_image" ret))
-     (send res :success :data)
+     (send res :success)
      ))
   (:set-show-image-folder-path 
    (name)
