@@ -1,0 +1,4 @@
+<launch>
+  <arg name="nao_ip" default="$(optenv NAO_IP 127.0.0.1)"/> 
+  <node pkg="jsk_pepper_startup" type="test.py" name="test" output="screen"/>
+</launch>
