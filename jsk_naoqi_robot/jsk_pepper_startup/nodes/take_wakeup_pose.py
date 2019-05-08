@@ -43,4 +43,6 @@ def take_initial_pose():
 
 if __name__=="__main__":
     rospy.init_node("take_initial_pose")
+    # sleep 2 sec to wait until is_robot_wakeup.py kills jsk_pepper_startup.launch completely before Pepper takes initial pose.
+    rospy.sleep(2)
     take_initial_pose()
