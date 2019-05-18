@@ -19,20 +19,13 @@ class StartSpeechRecognition():
     def detect_calling(self, msg):
         if msg.data:
             req = SpeechRecognitionRequest()
-            # req.vocabulary.words.append("おはよう")
-            # req.vocabulary.words.append("おやすみ")
-            # req.vocabulary.words.append("紹介して")
-            # req.vocabulary.words.append("ハンコ押して")
-            # req.vocabulary.words.append("配って")
-            # req.vocabulary.words.append("代わって")
-            # req.vocabulary.words.append("移動して")
-            req.vocabulary.words.append("ohayo")
-            req.vocabulary.words.append("oyasumi")
-            # req.vocabulary.words.append("shokai shite")
-            # req.vocabulary.words.append("hanko oshite")
-            # req.vocabulary.words.append("kubatte")
-            # req.vocabulary.words.append("kawatte")
-            # req.vocabulary.words.append("idou shite")
+            req.vocabulary.words.append("おはよう")
+            req.vocabulary.words.append("おやすみ")
+            req.vocabulary.words.append("紹介して")
+            req.vocabulary.words.append("ハンコ押して")
+            req.vocabulary.words.append("配って")
+            req.vocabulary.words.append("代わって")
+            req.vocabulary.words.append("移動して")
             req.duration = 5
             req.threshold = 0.3
             res = self.start_speech_recognition_service(req)
@@ -43,12 +36,16 @@ class StartSpeechRecognition():
     cb(msg)
             File "/home/kanae/catkin_ws/src/jsk_robot/jsk_naoqi_robot/jsk_pepper_startup/nodes/start_speech_recognition.py", line 41, in detect_calling
             if res.result.transcript[0] == 'ohayo':
-            IndexError: list index out of range
+            IndexError: list index out of range => len(res.result.transcript) > 0:
             '''
             if res.result.transcript is not None and len(res.result.transcript) > 0:
-                if res.result.transcript[0] == 'ohayo':
+                if res.result.transcript[0] == "おはよう":
                     msg = String()
                     msg.data = "\\vct=120\\おはよう\\pau=1000\\オッケー，グーグル，未来館の電気をつけて"
+                    self.pub.publish(msg)
+                if res.result.transcript[0] == "おやすみ":
+                    msg = String()
+                    msg.data = "\\vct=120\\おやすみ\\pau=1000\\オッケー，グーグル，未来館の電気を消して"
                     self.pub.publish(msg)
 
     def start_speech_recognition_service(self, req):
