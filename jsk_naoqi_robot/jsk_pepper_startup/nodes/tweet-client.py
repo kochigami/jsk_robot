@@ -7,7 +7,7 @@ from std_msgs.msg import String
 def tweet (name):
     rospy.sleep(3)
     msg = String()
-    msg.data = "おはよう\n\n" + str(name) + "より"
+    msg.data = "おはよう\n\n" + str(name)
     pub.publish(msg)
 
 if __name__ == '__main__':
