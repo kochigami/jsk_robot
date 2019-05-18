@@ -15,9 +15,12 @@ class StartSpeechRecognition(ConnectionBasedTransport):
         super(StartSpeechRecognition, self).__init__()
 
     def subscribe(self):
+        # sub
         self.sub = rospy.Subscriber("/speech_recognition_start_signal", Bool, self.detect_calling)
         # pub
         self.pub = rospy.Publisher("/speech", String, queue_size=1)
+        # param
+        self.room = rospy.get_param("~room", "未来館")
 
     def unsubscribe(self):
         self.sub.unregister()
@@ -36,24 +39,21 @@ class StartSpeechRecognition(ConnectionBasedTransport):
             req.duration = 5
             req.threshold = 0.3
             res = self.start_speech_recognition_service(req)
-            '''
-            [ERROR] [1558169595.278265]: bad callback: <bound method StartSpeechRecognition.detect_calling of <__main__.StartSpeechRecognition instance at 0x7fb514f3b5f0>>
-            Traceback (most recent call last):
-            File "/opt/ros/kinetic/lib/python2.7/dist-packages/rospy/topics.py", line 750, in _invoke_callback
-    cb(msg)
-            File "/home/kanae/catkin_ws/src/jsk_robot/jsk_naoqi_robot/jsk_pepper_startup/nodes/start_speech_recognition.py", line 41, in detect_calling
-            if res.result.transcript[0] == 'ohayo':
-            IndexError: list index out of range => len(res.result.transcript) > 0:
-            '''
             if res.result.transcript is not None and len(res.result.transcript) > 0:
                 if res.result.transcript[0] == "おはよう":
                     msg = String()
-                    msg.data = "\\vct=120\\おはよう\\pau=1000\\オッケー，グーグル，未来館の電気をつけて"
+                    msg.data = "\\vct=120\\おはようッ\\pau=2000\\オッケー\\pau=500\\グーグル\\pau=500\\" + self.room + "の電気をつけて"
                     self.pub.publish(msg)
-                if res.result.transcript[0] == "おやすみ":
+                elif res.result.transcript[0] == "おやすみ":
                     msg = String()
-                    msg.data = "\\vct=120\\おやすみ\\pau=1000\\オッケー，グーグル，未来館の電気を消して"
+                    msg.data = "\\vct=120\\おやすみッ\\pau=2000\\オッケー\\pau=500\\グーグル\\pau=500\\" + self.room +"の電気を消して"
                     self.pub.publish(msg)
+                elif res.result.transcript[0] == "紹介して":
+                    # select language
+                    # tablet.launch
+                    # speech.launch
+                    # main.l
+                    pass
             else:
                 return None
             self.subscribe()
