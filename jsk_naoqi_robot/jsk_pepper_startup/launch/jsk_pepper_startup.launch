@@ -69,11 +69,7 @@ enable_turbo_button: 0  # A button
     <node pkg="jsk_pepper_startup" type="start_basic_awareness.py" name="start_basic_awareness" />
     <include file="$(find naoqi_apps)/launch/background_movement.launch" />
     <node pkg="jsk_pepper_startup" type="start_background_movement.py" name="start_background_movement" />
-    <node pkg="jsk_pepper_startup" type="start_speech_recognition.py" name="start_speech_recognition" output="screen">
-      <rosparam>
-        robot_name: 'olive'
-      </rosparam>
-    </node>
+    <node pkg="jsk_pepper_startup" type="start_speech_recognition.py" name="start_speech_recognition" output="screen" />
   </group>
 
   <!-- Please use naoqi_dashboard (kochigami-develop) -->
