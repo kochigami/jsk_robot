@@ -61,9 +61,9 @@ enable_turbo_button: 0  # A button
       <param name="filename_format" value="/tmp/pepper_camera.png" />
     </node>
     <!-- reference: https://answers.ros.org/question/233353/set-delay-between-starting-nodes-within-launch-file/ -->
-    <node pkg="jsk_pepper_startup" name="twitter_client" type="tweet-client.l" launch-prefix="bash -c 'sleep $(arg tweet_client_node_start_delay); $0 $@'" >
+    <node pkg="jsk_pepper_startup" name="twitter_client" type="tweet-client.l" launch-prefix="bash -c 'sleep $(arg tweet_client_node_start_delay); $0 $@'" output="screen"  >
       <rosparam>
-	robot_name: $(arg robot_name)
+      robot_name: $(arg robot_name)
       </rosparam>
     </node>
   </group>
