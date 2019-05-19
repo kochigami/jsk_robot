@@ -2,21 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import rospy
+from subprocess import *
 from speech_recognition_msgs.srv import (
     SpeechRecognition,
     SpeechRecognitionRequest)
-from std_msgs.msg import (
-    Bool,
-    String)
+from std_msgs.msg import Bool
 
 class StartSpeechRecognition():
     def __init__(self):
         # sub
         self.sub = rospy.Subscriber("/speech_recognition_start_signal", Bool, self.detect_calling)
-        # pub
-        self.pub = rospy.Publisher("/speech", String, queue_size=1)
-        # param
-        self.room = rospy.get_param("~room", "未来館")
 
     def detect_calling(self, msg):
         if msg.data:
@@ -33,19 +28,12 @@ class StartSpeechRecognition():
             res = self.start_speech_recognition_service(req)
             if res.result.transcript is not None and len(res.result.transcript) > 0:
                 if res.result.transcript[0] == "おはよう":
-                    msg = String()
-                    msg.data = "\\vct=120\\おはようッ\\pau=2000\\オッケー\\pau=500\\グーグル\\pau=500\\" + self.room + "の電気をつけて"
-                    self.pub.publish(msg)
+                    self.good_morning()
                 elif res.result.transcript[0] == "おやすみ":
-                    msg = String()
-                    msg.data = "\\vct=120\\おやすみッ\\pau=2000\\オッケー\\pau=500\\グーグル\\pau=500\\" + self.room +"の電気を消して"
-                    self.pub.publish(msg)
+                    self.good_night()
                 elif res.result.transcript[0] == "紹介して":
-                    # select language
-                    # tablet.launch
-                    # speech.launch
-                    # main.l
-                    pass
+                    # TODO: select language
+                    self.miraikan_introduction()
             else:
                 return None
 
@@ -54,6 +42,26 @@ class StartSpeechRecognition():
         speech_recognition_proxy = rospy.ServiceProxy('speech_recognition', SpeechRecognition)
         res = speech_recognition_proxy(req)
         return res
+
+    def get_package_path(self):
+        rospack = rospkg.RosPack()
+        path_to_pkg = rospack.get_path('miraikan_live')
+        return path_to_pkg
+        
+    def good_morning(self):
+        file_path = path_to_pkg + '/scripts/actions/' + 'good_morning.sh'
+        call(['bash', file_path])
+        return True
+
+    def good_night(self):
+        file_path = path_to_pkg + '/scripts/actions/' + 'good_night.sh'
+        call(['bash', file_path])
+        return True
+        
+    def miraikan_introduction(self):
+        file_path = path_to_pkg + '/scripts/actions/' + 'miraikan_introduction.sh'
+        call(['bash', file_path])
+        return True
         
 if __name__ == "__main__":
     rospy.init_node("start_speech_recognition")
