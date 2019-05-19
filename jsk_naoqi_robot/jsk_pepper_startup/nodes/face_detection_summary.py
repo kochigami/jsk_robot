@@ -2,26 +2,20 @@
 # -*- coding: utf-8 -*-
 
 import rospy
-from jsk_topic_tools import ConnectionBasedTransport
 from opencv_apps.msg import FaceArrayStamped
 from std_msgs.msg import Bool
 
-class FaceDetectionSummary(ConnectionBasedTransport):
+class FaceDetectionSummary():
     def __init__(self):
         self.pub = rospy.Publisher("/speech_recognition_start_signal", Bool, queue_size=1)
+        self.sub = rospy.Subscriber("/face_detection/faces", FaceArrayStamped, self.detect_calling)
 
-        self.size = rospy.get_param("~size", 70)
-        self.count_limit = rospy.get_param("~count_limit", 10)
+        self.size = rospy.get_param("~size", 60)
+        self.count_limit = rospy.get_param("~count_limit", 5)
         self.time_limit = rospy.get_param("~time_limit", 7)
 
         self.time = rospy.Time.now()
         self.count = 0
-
-    def subscribe(self):
-        self.sub = rospy.Subscriber("/face_detection/faces", FaceArrayStamped, self.detect_calling)
-
-    def unsubscribe(self):
-        self.sub.unregister()
 
     def detect_calling(self, msg):
         if len(msg.faces) > 0:
