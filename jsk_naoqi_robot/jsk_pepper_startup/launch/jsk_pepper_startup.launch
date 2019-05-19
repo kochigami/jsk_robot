@@ -69,9 +69,9 @@ enable_turbo_button: 0  # A button
     <node pkg="jsk_pepper_startup" type="start_basic_awareness.py" name="start_basic_awareness" />
     <include file="$(find naoqi_apps)/launch/background_movement.launch" />
     <node pkg="jsk_pepper_startup" type="start_background_movement.py" name="start_background_movement" />
-    <include file="$(find opencv_apps)/launch/face_detection.launch">
+    <include file="$(find opencv_apps)/launch/face_detection.launch" respawn="true">
       <arg name="image" value="/pepper_robot/camera/front/image_raw" />
-      <arg name="debug_view" value="true" />
+      <arg name="debug_view" value="false" />
     </include>
     <node pkg="jsk_pepper_startup" type="face_detection_summary.py" name="face_detection_summary" output="screen" respawn="true"/>
     <node pkg="jsk_pepper_startup" type="start_speech_recognition.py" name="start_speech_recognition" output="screen" respawn="true"/>

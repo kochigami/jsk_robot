@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import rospy
+import rospkg
 from subprocess import *
 from speech_recognition_msgs.srv import (
     SpeechRecognition,
