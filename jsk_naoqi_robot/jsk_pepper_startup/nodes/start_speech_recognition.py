@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import rospy
-from jsk_topic_tools import ConnectionBasedTransport
 from speech_recognition_msgs.srv import (
     SpeechRecognition,
     SpeechRecognitionRequest)
@@ -10,11 +9,8 @@ from std_msgs.msg import (
     Bool,
     String)
 
-class StartSpeechRecognition(ConnectionBasedTransport):
+class StartSpeechRecognition():
     def __init__(self):
-        super(StartSpeechRecognition, self).__init__()
-
-    def subscribe(self):
         # sub
         self.sub = rospy.Subscriber("/speech_recognition_start_signal", Bool, self.detect_calling)
         # pub
@@ -22,12 +18,8 @@ class StartSpeechRecognition(ConnectionBasedTransport):
         # param
         self.room = rospy.get_param("~room", "未来館")
 
-    def unsubscribe(self):
-        self.sub.unregister()
-
     def detect_calling(self, msg):
         if msg.data:
-            self.unsubscribe()
             req = SpeechRecognitionRequest()
             req.vocabulary.words.append("おはよう")
             req.vocabulary.words.append("おやすみ")
@@ -56,7 +48,6 @@ class StartSpeechRecognition(ConnectionBasedTransport):
                     pass
             else:
                 return None
-            self.subscribe()
 
     def start_speech_recognition_service(self, req):
         rospy.wait_for_service('speech_recognition')
