@@ -49,16 +49,19 @@ class StartSpeechRecognition():
         return path_to_pkg
         
     def good_morning(self):
+        path_to_pkg = self.get_package_path()
         file_path = path_to_pkg + '/scripts/actions/' + 'good_morning.sh'
         call(['bash', file_path])
         return True
 
     def good_night(self):
+        path_to_pkg = self.get_package_path()
         file_path = path_to_pkg + '/scripts/actions/' + 'good_night.sh'
         call(['bash', file_path])
         return True
         
     def miraikan_introduction(self):
+        path_to_pkg = self.get_package_path()
         file_path = path_to_pkg + '/scripts/actions/' + 'miraikan_introduction.sh'
         call(['bash', file_path])
         return True
